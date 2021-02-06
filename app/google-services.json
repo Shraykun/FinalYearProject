@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "184591049811",
+    "project_id": "bee-tracking-app-9b4ff",
+    "storage_bucket": "bee-tracking-app-9b4ff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:184591049811:android:1066854baccff1cd7a92a6",
+        "android_client_info": {
+          "package_name": "com.example.beetrackingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "184591049811-p4h8a190cie4f15bu8hl9d9i69ogf5rg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA26kdWviEV0HAlBgkckPg3D9KWSu7bj38"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "184591049811-p4h8a190cie4f15bu8hl9d9i69ogf5rg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
