@@ -60,7 +60,6 @@ import java.util.Locale;
 
 public class CameraActivity extends AppCompatActivity {
     //Initialise variables
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int CAMERA_PERMISSION_CODE = 1;
     private static final int PICK_IMAGE_REQUEST = 1;
 
@@ -390,6 +389,9 @@ public class CameraActivity extends AppCompatActivity {
                                     infoMap.put("image", url);
 
                                     root.setValue(infoMap);
+
+                                    Intent intent = new Intent(CameraActivity.this, MainActivity.class);
+                                    startActivity(intent);
                                 }
                             });
                         }
