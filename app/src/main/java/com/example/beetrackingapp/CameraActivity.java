@@ -30,9 +30,11 @@ import android.provider.Settings;
 import android.text.Html;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +56,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.Console;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -65,8 +68,9 @@ public class CameraActivity extends AppCompatActivity {
 
     private ImageView imageView;
     private Button btnlocation, btnSubmit, btnCamera;
-    private TextView latitude, longitude, country, local, address;
+    private TextView latitude, longitude, country, address;
     private ProgressBar progressBar;
+    private Spinner colorSpn, featureSpn, statusSpn;
 
     FusedLocationProviderClient fusedLocationProviderClient;
 
@@ -89,9 +93,11 @@ public class CameraActivity extends AppCompatActivity {
         latitude = findViewById(R.id.latitude);
         longitude = findViewById(R.id.longitude);
         country = findViewById(R.id.country);
-        local = findViewById(R.id.local);
         address = findViewById(R.id.address);
         progressBar = findViewById(R.id.uploadProg);
+        colorSpn = findViewById(R.id.colorScheme_Spinner);
+        featureSpn = findViewById(R.id.feature_Spinner);
+        statusSpn = findViewById(R.id.status_Spinner);
 
         //Initialise fusedLocation
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(CameraActivity.this);
@@ -113,6 +119,45 @@ public class CameraActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //Spinner options
+        List<String> color = new ArrayList<>();
+        color.add("- Chose a color type that matches the bee(s) -");
+        color.add("Thorax: Ginger | Abdomen: Black | Tail: White");
+        color.add("Thorax: Black | Abdomen: Black | Tail: Red/Orange");
+        color.add("Thorax: Yellow | Abdomen: Yellow | Tail: White");
+        color.add("Thorax: Brown | Abdomen: Ginger/Brown | Tail: --");
+        color.add("Thorax: Brown | Abdomen: Orange | Tail: --");
+        color.add("Thorax: Orange | Abdomen: Orange | Tail: --");
+        color.add("Thorax: Grey/Ashy | Abdomen: Black | Tail: --");
+        color.add("None of the above");
+
+        ArrayAdapter<String> colorAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, color);
+        colorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        colorSpn.setAdapter(colorAdapter);
+        //Then set on click listener. Which we dont need
+
+        List<String> feature = new ArrayList<>();
+        feature.add("- Chose a distinct feature the bee has -");
+        feature.add("Black head");
+        feature.add("Thick orange coat");
+        feature.add("Monochrome color/Ashy color");
+        feature.add("None of the Above");
+
+        ArrayAdapter<String> featureAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, feature);
+        featureAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        featureSpn.setAdapter(featureAdapter);
+
+        List<String> status = new ArrayList<>();
+        status.add("- What state did you find it as -");
+        status.add("Deceased");
+        status.add("Alive");
+        status.add("Do not know");
+
+        ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, status);
+        statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        statusSpn.setAdapter(statusAdapter);
+
 
         //CAMERA SETTINGS
         //Check if device has a camera
@@ -260,19 +305,24 @@ public class CameraActivity extends AppCompatActivity {
                             List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
 
                             //Set latitude
-                            latitude.setText(String.format(String.valueOf(addresses.get(0).getLatitude()))
+                            latitude.setText(Html.fromHtml(
+                                    "<font color='#6200EE'><b>Latitude: </b><br></font>"
+                                            + addresses.get(0).getLatitude())
                             );
                             //Set longitude
-                            longitude.setText(String.format(String.valueOf(addresses.get(0).getLongitude()))
+                            longitude.setText(Html.fromHtml(
+                                    "<font color='#6200EE'><b>Longitude: </b><br></font>"
+                                            + addresses.get(0).getLongitude())
                             );
                             //Set country
-                            country.setText(addresses.get(0).getCountryName()
-                            );
-                            //Set locality
-                            local.setText(addresses.get(0).getLocality()
+                            country.setText(Html.fromHtml(
+                                    "<font color='#6200EE'><b>Country: </b><br></font>"
+                                            + addresses.get(0).getCountryName())
                             );
                             //Set address
-                            address.setText(addresses.get(0).getAddressLine(0)
+                            address.setText(Html.fromHtml(
+                                    "<font color='#6200EE'><b>Address: </b><br></font>"
+                                            + addresses.get(0).getAddressLine(0))
                             );
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -311,11 +361,6 @@ public class CameraActivity extends AppCompatActivity {
                                             "<font color='#6200EE'><b>Country: </b><br></font>"
                                                     + addresses.get(0).getCountryName()
                                     ));
-                                    //Set locality
-                                    local.setText(Html.fromHtml(
-                                            "<font color='#6200EE'><b>Locality: </b><br></font>"
-                                                    + addresses.get(0).getLocality()
-                                    ));
                                     //Set address
                                     address.setText(Html.fromHtml(
                                             "<font color='#6200EE'><b>Address: </b><br></font>"
@@ -350,9 +395,14 @@ public class CameraActivity extends AppCompatActivity {
         String lat = latitude.getText().toString();
         String longi = longitude.getText().toString();
         String count = country.getText().toString();
-        String loc = local.getText().toString();
         String add = address.getText().toString();
-
+        String key = root.getKey();
+        colorSpn = (Spinner) findViewById(R.id.colorScheme_Spinner);
+        String color_data = colorSpn.getSelectedItem().toString();
+        featureSpn = (Spinner) findViewById(R.id.feature_Spinner);
+        String feature_data = featureSpn.getSelectedItem().toString();
+        statusSpn = (Spinner) findViewById(R.id.status_Spinner);
+        String status_data = statusSpn.getSelectedItem().toString();
 
 
         if (imageUri != null || lat.equals("")){
@@ -381,12 +431,15 @@ public class CameraActivity extends AppCompatActivity {
                                     //Uploading
                                     HashMap<String , String> infoMap = new HashMap<>();
 
+                                    infoMap.put("ID", key);
                                     infoMap.put("address", add);
                                     infoMap.put("country", count);
-                                    infoMap.put("local", loc);
                                     infoMap.put("latitude", lat);
                                     infoMap.put("longitude", longi);
                                     infoMap.put("image", url);
+                                    infoMap.put("color", color_data);
+                                    infoMap.put("feature", feature_data);
+                                    infoMap.put("status", status_data);
 
                                     root.setValue(infoMap);
 
@@ -409,8 +462,6 @@ public class CameraActivity extends AppCompatActivity {
                             progressBar.setProgress((int) progress);
                         }
                     });
-
-
 
 
         } else {
