@@ -56,19 +56,30 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.Console;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class CameraActivity extends AppCompatActivity {
+    //Weather API
+    public static String BaseUrl = "https://api.openweathermap.org/";
+    public static String AppId = "e4262f7a7460b65a2bf77e6d0f7c2707";
     //Initialise variables
     private static final int CAMERA_PERMISSION_CODE = 1;
     private static final int PICK_IMAGE_REQUEST = 1;
 
     private ImageView imageView;
     private Button btnlocation, btnSubmit, btnCamera;
-    private TextView latitude, longitude, country, address;
+    private TextView latitude, longitude, country, address, weath;
     private ProgressBar progressBar;
     private Spinner colorSpn, featureSpn, statusSpn;
 
@@ -98,6 +109,7 @@ public class CameraActivity extends AppCompatActivity {
         colorSpn = findViewById(R.id.colorScheme_Spinner);
         featureSpn = findViewById(R.id.feature_Spinner);
         statusSpn = findViewById(R.id.status_Spinner);
+        weath = findViewById(R.id.weather);
 
         //Initialise fusedLocation
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(CameraActivity.this);
@@ -324,6 +336,8 @@ public class CameraActivity extends AppCompatActivity {
                                     "<font color='#6200EE'><b>Address: </b><br></font>"
                                             + addresses.get(0).getAddressLine(0))
                             );
+
+                            getCurrentWeather(Double.toString(Math.round(location.getLatitude())), Double.toString(Math.round(location.getLongitude())));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -392,11 +406,14 @@ public class CameraActivity extends AppCompatActivity {
 
     //FIREBASE SETTINGS
     private void uploadInfo(){
+        //Location data
         String lat = latitude.getText().toString();
         String longi = longitude.getText().toString();
         String count = country.getText().toString();
         String add = address.getText().toString();
         String key = root.getKey();
+
+        //Question data
         colorSpn = (Spinner) findViewById(R.id.colorScheme_Spinner);
         String color_data = colorSpn.getSelectedItem().toString();
         featureSpn = (Spinner) findViewById(R.id.feature_Spinner);
@@ -404,8 +421,16 @@ public class CameraActivity extends AppCompatActivity {
         statusSpn = (Spinner) findViewById(R.id.status_Spinner);
         String status_data = statusSpn.getSelectedItem().toString();
 
+        //Date and Time data
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE dd-MMM-yyyy hh:mm:ss a");
+        String dataTime = simpleDateFormat.format(calendar.getTime());
 
-        if (imageUri != null || lat.equals("")){
+        //Weather Data
+        String weather = weath.getText().toString();
+
+
+        if (imageUri != null && !lat.equals("")){
             //Image
             StorageReference fileRef = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
 
@@ -425,8 +450,7 @@ public class CameraActivity extends AppCompatActivity {
                             fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
-                                    Uri downloadUrl = uri;
-                                    final String url = downloadUrl.toString();
+                                    final String url = uri.toString();
 
                                     //Uploading
                                     HashMap<String , String> infoMap = new HashMap<>();
@@ -437,9 +461,11 @@ public class CameraActivity extends AppCompatActivity {
                                     infoMap.put("latitude", lat);
                                     infoMap.put("longitude", longi);
                                     infoMap.put("image", url);
+                                    infoMap.put("time", dataTime);
                                     infoMap.put("color", color_data);
                                     infoMap.put("feature", feature_data);
                                     infoMap.put("status", status_data);
+                                    infoMap.put("weather", weather);
 
                                     root.setValue(infoMap);
 
@@ -469,5 +495,50 @@ public class CameraActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    //Weather
+    private void getCurrentWeather(String lat, String lon){
+        //To get weather as JSON
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BaseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        //Return the JSON object
+        WeatherService service = retrofit.create(WeatherService.class);
+        Call<WeatherResponse> call = service.getCurrentWeatherData(lat, lon, AppId);
+        call.enqueue(new Callback<WeatherResponse>() {
+            @Override
+            public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
+                if (response.code() == 200) {
+                    WeatherResponse weatherResponse = response.body();
+                    assert weatherResponse != null;
+
+                    String stringWeather = "Weather: " + weatherResponse.weathers.get(0).description +
+                            "\n" +
+                            "Temperature: " + weatherResponse.main.temp +
+                            "\n" +
+                            "Temperature(Min): " +
+                            weatherResponse.main.temp_min +
+                            "\n" +
+                            "Temperature(Max): " +
+                            weatherResponse.main.temp_max +
+                            "\n" +
+                            "Humidity: " +
+                            weatherResponse.main.humidity +
+                            "\n" +
+                            "Pressure: " +
+                            weatherResponse.main.pressure;
+
+                    weath.setText(stringWeather);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WeatherResponse> call, Throwable t) {
+                weath.setText(t.getMessage());
+            }
+        });
     }
 }
