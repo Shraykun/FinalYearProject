@@ -32,6 +32,7 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -78,7 +79,8 @@ public class CameraActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
 
     private ImageView imageView;
-    private Button btnlocation, btnSubmit, btnCamera;
+    private Button btnlocation, btnCamera;
+    private ImageButton btnSubmit, btnHome;
     private TextView latitude, longitude, country, address, weath;
     private ProgressBar progressBar;
     private Spinner colorSpn, featureSpn, statusSpn;
@@ -220,6 +222,21 @@ public class CameraActivity extends AppCompatActivity {
             }
         });
 
+        //Home button
+        btnHome = (ImageButton) findViewById(R.id.btnHome);
+        btnHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openHomeActivity();
+            }
+        });
+
+    }
+
+    //Going to home screen
+    private void openHomeActivity(){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     //CAMERA SETTINGS

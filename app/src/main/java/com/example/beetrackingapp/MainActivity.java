@@ -20,6 +20,7 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -36,7 +37,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     //Initialising variables
-    private Button btn;
+    private ImageButton btn, btnMap;
     private RecyclerView recyclerView;
     private ProgressBar progressCircle;
     private FirebaseDatabase database;
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Going to the submiting activity
-        btn = (Button) findViewById(R.id.btnCameraView);
+        btn = (ImageButton) findViewById(R.id.btnCameraView);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,11 +88,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btnMap = (ImageButton) findViewById(R.id.btnMapView);
+        btnMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { openMapActivity(); }
+        });
 
     }
 
     public void openCameraActivity(){
         Intent intent = new Intent(this, CameraActivity.class);
+        startActivity(intent);
+    }
+
+    public void openMapActivity(){
+        Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
     }
 }
