@@ -80,7 +80,7 @@ public class CameraActivity extends AppCompatActivity {
 
     private ImageView imageView;
     private Button btnlocation, btnCamera;
-    private ImageButton btnSubmit, btnHome;
+    private ImageButton btnSubmit;
     private TextView latitude, longitude, country, address, weath;
     private ProgressBar progressBar;
     private Spinner colorSpn, featureSpn, statusSpn;
@@ -222,21 +222,6 @@ public class CameraActivity extends AppCompatActivity {
             }
         });
 
-        //Home button
-        btnHome = (ImageButton) findViewById(R.id.btnHome);
-        btnHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openHomeActivity();
-            }
-        });
-
-    }
-
-    //Going to home screen
-    private void openHomeActivity(){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
     }
 
     //CAMERA SETTINGS
