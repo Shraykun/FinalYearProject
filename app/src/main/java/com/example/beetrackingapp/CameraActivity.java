@@ -119,6 +119,7 @@ public class CameraActivity extends AppCompatActivity {
         //Storage
         mStorageRef = FirebaseStorage.getInstance("gs://bee-tracking-app-9b4ff.appspot.com").getReference("uploads");
 
+        //Location access
         btnlocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -149,7 +150,6 @@ public class CameraActivity extends AppCompatActivity {
         ArrayAdapter<String> colorAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, color);
         colorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         colorSpn.setAdapter(colorAdapter);
-        //Then set on click listener. Which we dont need
 
         List<String> feature = new ArrayList<>();
         feature.add("- Chose a distinct feature the bee has -");
@@ -172,34 +172,6 @@ public class CameraActivity extends AppCompatActivity {
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         statusSpn.setAdapter(statusAdapter);
 
-
-        //CAMERA SETTINGS
-        //Check if device has a camera
-//        if (getApplicationContext().getPackageManager().hasSystemFeature(
-//                PackageManager.FEATURE_CAMERA_ANY)) {
-//            Button btnCamera = (Button) findViewById(R.id.btnCamera);
-//            imageView = (ImageView) findViewById(R.id.imageView);
-//
-//            //When clicking on button
-//            btnCamera.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if (ContextCompat.checkSelfPermission(CameraActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-//                        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                        try {
-//                            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-//                        } catch (ActivityNotFoundException e) {
-//                            // display error state to the user
-//                        }
-//                    } else {
-//                        requestCameraPermission();
-//                    }
-//
-//                }
-//            });
-//        } else {
-//            Toast.makeText(CameraActivity.this, "There is no Camera feature available", Toast.LENGTH_SHORT).show();
-//        }
 
         //SELECTING A PICTURE
         btnCamera = findViewById(R.id.btnCamera);
@@ -232,7 +204,7 @@ public class CameraActivity extends AppCompatActivity {
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
-    //When picture is taken
+    //When picture is is uploaded, url is set as a preview in the image view
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -241,35 +213,6 @@ public class CameraActivity extends AppCompatActivity {
             imageUri = data.getData();
 
             imageView.setImageURI(imageUri);
-        }
-//        Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-//        imageView.setImageBitmap(bitmap);
-//        imageUri = data.getData();
-    }
-
-    //Checks if permission is given, if not as for permission.
-    private void requestCameraPermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-
-            new AlertDialog.Builder(this)
-                    .setTitle("Permission needed")
-                    .setMessage("This permission is needed to access the camera and take pictures")
-                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(CameraActivity.this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
-                        }
-                    })
-                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .create().show();
-
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
         }
     }
 

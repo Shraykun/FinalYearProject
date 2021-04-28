@@ -17,6 +17,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -26,6 +27,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton btn, btnMap;
     private RecyclerView recyclerView;
     private ProgressBar progressCircle;
-    private FirebaseDatabase database;
-    private DatabaseReference databaseReference;
     private ImageAdapter imageAdapter;
     private List<Info> infos;
 
@@ -50,13 +50,39 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //For navigation bar
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
+
+        //Set current as selected
+        bottomNavigationView.setSelectedItemId(R.id.nav_list);
+
+        //When buttons get clicked
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.nav_home:
+                        startActivity(new Intent(getApplicationContext(), NavActivity.class));
+                        overridePendingTransition(0, 0);
+                        return true;
+                    case R.id.nav_map:
+                        startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                        overridePendingTransition(0, 0);
+                        return true;
+                    case R.id.nav_list:
+                        return true;
+                }
+                return false;
+            }
+        });
+
         //Retrieving data
         recyclerView = findViewById(R.id.list_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         progressCircle= findViewById(R.id.progress_circular);
-        database = FirebaseDatabase.getInstance("https://bee-tracking-app-9b4ff-default-rtdb.firebaseio.com/");
-        databaseReference = database.getReference().child("Bee Data");
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://bee-tracking-app-9b4ff-default-rtdb.firebaseio.com/");
+        DatabaseReference databaseReference = database.getReference().child("Bee Data");
         infos = new ArrayList<>();
 
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -79,30 +105,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Going to the submiting activity
-        btn = (ImageButton) findViewById(R.id.btnCameraView);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openCameraActivity();
-            }
-        });
-
-        btnMap = (ImageButton) findViewById(R.id.btnMapView);
-        btnMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) { openMapActivity(); }
-        });
-
-    }
-
-    public void openCameraActivity(){
-        Intent intent = new Intent(this, CameraActivity.class);
-        startActivity(intent);
-    }
-
-    public void openMapActivity(){
-        Intent intent = new Intent(this, MapsActivity.class);
-        startActivity(intent);
     }
 }

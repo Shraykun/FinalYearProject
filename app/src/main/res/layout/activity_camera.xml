@@ -35,8 +35,8 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="147dp"
-                android:layout_height="227dp"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
                 android:layout_marginTop="16dp"
                 android:contentDescription="Picture"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -48,7 +48,7 @@
                 android:layout_width="253dp"
                 android:layout_height="45dp"
                 android:layout_marginTop="12dp"
-                android:text="Take Picture"
+                android:text="Upload Image"
                 app:backgroundTint="#FF5722"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -179,8 +179,7 @@
         android:id="@+id/uploadProg"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="24dp"
-        android:layout_marginBottom="8dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/nav_bot"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -190,7 +189,7 @@
         android:id="@+id/nav_bot"
         android:layout_width="match_parent"
         android:layout_height="67dp"
-        android:background="@android:color/background_dark"
+        android:background="@color/teal_700"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -203,7 +202,8 @@
             android:layout_height="67dp"
             android:background="#00FFFFFF"
             android:scaleType="fitCenter"
-            android:src="@android:drawable/ic_menu_send" />
+            android:src="@android:drawable/ic_menu_send"
+            android:tint="#000000" />
 
 
     </LinearLayout>

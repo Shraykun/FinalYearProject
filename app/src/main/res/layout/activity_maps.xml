@@ -3,50 +3,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MapsActivity">
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/map"
         tools:context=".MapsActivity"
         android:name="com.google.android.gms.maps.SupportMapFragment" />
 
-    <LinearLayout
+    <Button
+        android:id="@+id/btn_current"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_above="@+id/bottom_nav"
+        android:text="Current"
+        android:textColor="@color/black" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="bottom"
-        android:orientation="vertical">
+        android:gravity="bottom">
 
-        <LinearLayout
-            android:id="@+id/nav_bot"
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_nav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/background_dark"
-            android:gravity="center"
-            android:orientation="horizontal">
+            app:itemBackground="@color/teal_700"
+            app:itemIconTint="@drawable/selector"
+            app:itemTextColor="@drawable/selector"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:menu="@menu/menu_nav" />
 
-            <ImageButton
-                android:id="@+id/btnCam"
-                android:layout_width="100dp"
-                android:layout_height="67dp"
-                android:background="#00FFFFFF"
-                android:scaleType="fitCenter"
-                android:src="@android:drawable/ic_menu_camera"/>
-
-            <ImageButton
-                android:id="@+id/btnCurrent"
-                android:layout_width="100dp"
-                android:layout_height="67dp"
-                android:background="#00FFFFFF"
-                android:scaleType="fitCenter"
-                android:src="@android:drawable/ic_input_get" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
+    </RelativeLayout>
 </FrameLayout>
+
+
 
 

@@ -36,7 +36,11 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
         Info infocurrent = mInfo.get(position);
-        holder.textViewID.setText(infocurrent.getID());
+        holder.textViewQ1.setText(infocurrent.getColor());
+        holder.textViewQ2.setText(infocurrent.getFeature());
+        holder.textViewQ3.setText(infocurrent.getStatus());
+        holder.textViewTime.setText(infocurrent.getTime());
+        holder.textViewWeather.setText(infocurrent.getWeather());
         holder.textViewLong.setText(infocurrent.getLongitude());
         holder.textViewLat.setText(infocurrent.getLatitude());
         holder.textViewCount.setText(infocurrent.getCountry());
@@ -56,7 +60,11 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     }
 
     public class ImageViewHolder extends RecyclerView.ViewHolder{
-        public  TextView textViewID;
+        public TextView textViewQ1;
+        public TextView textViewQ2;
+        public TextView textViewQ3;
+        public TextView textViewTime;
+        public TextView textViewWeather;
         public TextView textViewLong;
         public TextView textViewLat;
         public TextView textViewCount;
@@ -66,7 +74,11 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            textViewID = itemView.findViewById(R.id.text_view_id);
+            textViewQ1 = itemView.findViewById(R.id.text_view_q1);
+            textViewQ2 = itemView.findViewById(R.id.text_view_q2);
+            textViewQ3 = itemView.findViewById(R.id.text_view_q3);
+            textViewTime = itemView.findViewById(R.id.text_view_time);
+            textViewWeather = itemView.findViewById(R.id.text_view_weather);
             textViewLong = itemView.findViewById(R.id.text_view_long);
             textViewLat = itemView.findViewById(R.id.text_view_lat);
             textViewCount = itemView.findViewById(R.id.text_view_country);

@@ -11,7 +11,9 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -26,6 +28,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,9 +40,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-    private ImageButton btnCam, btnCurrent;
-    private FirebaseDatabase database;
-    private DatabaseReference databaseReference;
     private HashMap<Marker, Info> mHashMap = new HashMap<Marker, Info>();
 
     private GoogleMap mMap;
@@ -57,15 +57,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        //For navigation bar
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
 
-        //Going to the submiting activity
-        btnCam = findViewById(R.id.btnCam);
-        btnCam.setOnClickListener(v -> openCameraActivity());
+        //Set current as selected
+        bottomNavigationView.setSelectedItemId(R.id.nav_map);
+
+        //When buttons get clicked
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.nav_home:
+                        startActivity(new Intent(getApplicationContext(), NavActivity.class));
+                        overridePendingTransition(0, 0);
+                        return true;
+                    case R.id.nav_map:
+                        return true;
+                    case R.id.nav_list:
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        overridePendingTransition(0, 0);
+                        return true;
+                }
+                return false;
+            }
+        });
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
 
-        btnCurrent = findViewById(R.id.btnCurrent);
-        btnCurrent.setOnClickListener(v -> getCurrentLocation());
+        Button btnCurrent = findViewById(R.id.btn_current);
+        btnCurrent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getCurrentLocation();
+            }
+        });
 
     }
 
@@ -79,8 +105,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(london));
 
         //For loop of markers and set the key of each data as key in marker
-        database = FirebaseDatabase.getInstance("https://bee-tracking-app-9b4ff-default-rtdb.firebaseio.com/");
-        databaseReference = database.getReference().child("Bee Data");
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://bee-tracking-app-9b4ff-default-rtdb.firebaseio.com/");
+        DatabaseReference databaseReference = database.getReference().child("Bee Data");
 
         //Getting each data set from firebase
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -117,7 +143,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public boolean onMarkerClick(Marker marker) {
                 //Extract information from hash map with this marker
                 Info info = mHashMap.get(marker);
-                // TODO: add functions for getting the questions and for weather and time
+                String q1 = info.getColor();
+                String q2 = info.getFeature();
+                String q3 = info.getStatus();
+                String time = info.getTime();
+                String weather = info.getWeather();
                 String lat = info.getLatitude();
                 String lon = info.getLongitude();
                 String add = info.getAddress();
@@ -131,6 +161,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 intent.putExtra("ADDRESS", add);
                 intent.putExtra("COUNTRY", count);
                 intent.putExtra("IMAGE", image);
+                intent.putExtra("COLOR", q1);
+                intent.putExtra("FEATURE", q2);
+                intent.putExtra("STATUS", q3);
+                intent.putExtra("TIME", time);
+                intent.putExtra("WEATHER", weather);
 
                 //Go to activity with the intent
                 startActivity(intent);
@@ -138,11 +173,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 return false;
             }
         });
-    }
-
-    public void openCameraActivity() {
-        Intent intent = new Intent(this, CameraActivity.class);
-        startActivity(intent);
     }
 
     private void getCurrentLocation() {
