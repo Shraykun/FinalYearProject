@@ -79,9 +79,11 @@ public class CameraActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
 
     private ImageView imageView;
-    private Button btnlocation, btnCamera;
-    private ImageButton btnSubmit;
-    private TextView latitude, longitude, country, address, weath;
+    private TextView latitude;
+    private TextView longitude;
+    private TextView country;
+    private TextView address;
+    private TextView weath;
     private ProgressBar progressBar;
     private Spinner colorSpn, featureSpn, statusSpn;
 
@@ -102,7 +104,7 @@ public class CameraActivity extends AppCompatActivity {
 
         //LOCATION SETTINGS
         //Assign
-        btnlocation = findViewById(R.id.btnLocation);
+        Button btnlocation = findViewById(R.id.btnLocation);
         latitude = findViewById(R.id.latitude);
         longitude = findViewById(R.id.longitude);
         country = findViewById(R.id.country);
@@ -112,6 +114,10 @@ public class CameraActivity extends AppCompatActivity {
         featureSpn = findViewById(R.id.feature_Spinner);
         statusSpn = findViewById(R.id.status_Spinner);
         weath = findViewById(R.id.weather);
+        TextView qTitle = findViewById(R.id.questionTitle);
+        TextView cTitle = findViewById(R.id.colorTitle);
+        TextView fTitle = findViewById(R.id.featureTitle);
+        TextView sTitle = findViewById(R.id.statusTitle);
 
         //Initialise fusedLocation
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(CameraActivity.this);
@@ -120,6 +126,8 @@ public class CameraActivity extends AppCompatActivity {
         mStorageRef = FirebaseStorage.getInstance("gs://bee-tracking-app-9b4ff.appspot.com").getReference("uploads");
 
         //Location access
+        String btnText = "Get Location";
+        btnlocation.setText(btnText);
         btnlocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,9 +143,22 @@ public class CameraActivity extends AppCompatActivity {
             }
         });
 
+        String title = "Questions (Optional)";
+        qTitle.setText(title);
+
+        String cT = "Choose a color type that matches the bee(s):";
+        cTitle.setText(cT);
+
+        String fT = "Choose a distinct feature the bee has:";
+        fTitle.setText(fT);
+
+        String sT = "What state did you find the bee as:";
+        sTitle.setText(sT);
+
         //Spinner options
+        //Color settings
         List<String> color = new ArrayList<>();
-        color.add("- Chose a color type that matches the bee(s) -");
+        color.add("None of the above");
         color.add("Thorax: Ginger | Abdomen: Black | Tail: White");
         color.add("Thorax: Black | Abdomen: Black | Tail: Red/Orange");
         color.add("Thorax: Yellow | Abdomen: Yellow | Tail: White");
@@ -145,28 +166,27 @@ public class CameraActivity extends AppCompatActivity {
         color.add("Thorax: Brown | Abdomen: Orange | Tail: --");
         color.add("Thorax: Orange | Abdomen: Orange | Tail: --");
         color.add("Thorax: Grey/Ashy | Abdomen: Black | Tail: --");
-        color.add("None of the above");
 
         ArrayAdapter<String> colorAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, color);
         colorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         colorSpn.setAdapter(colorAdapter);
 
+        //Feature settings
         List<String> feature = new ArrayList<>();
-        feature.add("- Chose a distinct feature the bee has -");
+        feature.add("None of the Above");
         feature.add("Black head");
         feature.add("Thick orange coat");
         feature.add("Monochrome color/Ashy color");
-        feature.add("None of the Above");
 
         ArrayAdapter<String> featureAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, feature);
         featureAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         featureSpn.setAdapter(featureAdapter);
 
+        //Status settings
         List<String> status = new ArrayList<>();
-        status.add("- What state did you find it as -");
+        status.add("Do not know");
         status.add("Deceased");
         status.add("Alive");
-        status.add("Do not know");
 
         ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, status);
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -174,7 +194,7 @@ public class CameraActivity extends AppCompatActivity {
 
 
         //SELECTING A PICTURE
-        btnCamera = findViewById(R.id.btnCamera);
+        Button btnCamera = findViewById(R.id.btnCamera);
         imageView = findViewById(R.id.imageView);
 
         //When clicking the button
@@ -186,7 +206,7 @@ public class CameraActivity extends AppCompatActivity {
         });
 
         //FIREBASE
-        btnSubmit = findViewById(R.id.btnSubmit);
+        ImageButton btnSubmit = findViewById(R.id.btnSubmit);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

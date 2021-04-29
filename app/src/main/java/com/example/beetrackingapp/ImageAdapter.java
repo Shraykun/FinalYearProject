@@ -36,9 +36,12 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
         Info infocurrent = mInfo.get(position);
-        holder.textViewQ1.setText(infocurrent.getColor());
-        holder.textViewQ2.setText(infocurrent.getFeature());
-        holder.textViewQ3.setText(infocurrent.getStatus());
+        String extraC = "Color: " + infocurrent.getColor();
+        holder.textViewQ1.setText(extraC);
+        String extraF = "Feature: " + infocurrent.getFeature();
+        holder.textViewQ2.setText(extraF);
+        String extraS = "Status: " + infocurrent.getStatus();
+        holder.textViewQ3.setText(extraS);
         holder.textViewTime.setText(infocurrent.getTime());
         holder.textViewWeather.setText(infocurrent.getWeather());
         holder.textViewLong.setText(infocurrent.getLongitude());

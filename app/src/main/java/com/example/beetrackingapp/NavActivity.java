@@ -29,8 +29,20 @@ public class NavActivity extends AppCompatActivity {
 
         //Instructions
         TextView step1 = findViewById(R.id.step1_view);
-        String one = "To get start for uploading information click the 'Upload Bee Information' button below";
+        String one = "To get started for uploading information click the 'Upload Bee Information' button below";
         step1.setText(one);
+
+        TextView step2 = findViewById(R.id.step2_view);
+        String two = "Location and an image from the gallery must be given to submit the data \n \n Questions about color, any distinct features and, the state of the bee are optional";
+        step2.setText(two);
+
+        TextView step3 = findViewById(R.id.step3_view);
+        String three = "The map tab will give a visual overview of the data \n \n Clicking the markers will give a better view of the data";
+        step3.setText(three);
+
+        TextView step4 = findViewById(R.id.step4_view);
+        String four = "The list tab shows the data in a list";
+        step4.setText(four);
 
         //Set current as selected
         bottomNavigationView.setSelectedItemId(R.id.nav_home);
