@@ -482,12 +482,12 @@ public class CameraActivity extends AppCompatActivity {
 
                     String stringWeather = "Weather: " + weatherResponse.weathers.get(0).description +
                             "\n" +
-                            "Temperature: " + weatherResponse.main.temp +
+                            "Temperature(K): " + weatherResponse.main.temp +
                             "\n" +
-                            "Temperature(Min): " +
+                            "Min-Temperature(K): " +
                             weatherResponse.main.temp_min +
                             "\n" +
-                            "Temperature(Max): " +
+                            "Max-Temperature(K): " +
                             weatherResponse.main.temp_max +
                             "\n" +
                             "Humidity: " +
