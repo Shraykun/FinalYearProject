@@ -73,7 +73,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class CameraActivity extends AppCompatActivity {
     //Weather API
     public static String BaseUrl = "https://api.openweathermap.org/";
-    public static String AppId = ""; //Get from website
+    public static String AppId = new Config().api_key;
     //Initialise variables
     private static final int CAMERA_PERMISSION_CODE = 1;
     private static final int PICK_IMAGE_REQUEST = 1;
